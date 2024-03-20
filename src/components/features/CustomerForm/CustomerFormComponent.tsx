@@ -18,7 +18,7 @@ const defaultTheme = createTheme();
 
 const CustomerForm = () => {
   const [formError, setFormError] = useState("");
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -45,7 +45,7 @@ const CustomerForm = () => {
       country: data.get("country"),
     };
     try {
-      const status = await submitCustomer(customerData);
+      await submitCustomer(customerData);
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {

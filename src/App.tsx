@@ -1,53 +1,54 @@
+import { useEffect, useState } from "react";
 import "./App.css";
-import CustomerCard from "./components/common/CustomerCardComponent";
 import CustomerForm from "./components/features/CustomerForm/CustomerFormComponent";
 import CustomerList from "./components/features/CustomersList/CustomerListComponent";
+import useGetCustomers from "./hooks/useGetCustomers";
+import { Alert, CircularProgress, Container } from "@mui/material";
+import { blue } from "@mui/material/colors";
 
 function App() {
-  const customerData = {
-    id: 3,
-    firstName: "Johannes",
-    lastName: "Berger",
-    notes: "Johannes ist Jäger.",
-    vatId: "DE123456798",
-    addressAddition: "Hinterm Hochsitz",
-    streetAndNumber: "Jägerweg 3",
-    postalCode: "34567",
-    city: "Jägerstadt",
-    country: "Deutschland",
-  };
-  const customerData2 = {
-    id: 2,
-    firstName: "Johannes",
-    lastName: "Mengliger",
-    notes: undefined,
-    vatId: undefined,
-    addressAddition: "Hinterm Hochsitz",
-    streetAndNumber: undefined,
-    postalCode: "34567",
-    city: "Jägerstadt",
-    country: "Deutschland",
-  };
-  const customerData3 = {
-    id: 123,
-    firstName: "Johannes",
-    lastName: "Alphons",
-    notes: undefined,
-    vatId: undefined,
-    streetAndNumber: "Golemweg 3B",
-    postalCode: "34567",
-    city: "Jägerstadt",
-  };
-  let customers = [
-    customerData, customerData2, customerData3
-  ];
+  const [appError, setAppError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  
-  customers = customers.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  const [customers, setCustomers] = useState([]); // Initialisiere den Kunden-Zustand als leeres Array
+  const fetchCustomers = useGetCustomers(); // Verwende den benutzerdefinierten Hook
 
+  useEffect(() => {
+    const loadCustomers = async () => {
+      setLoading(true);
+      setAppError("");
+      try {
+        const fetchedCustomers = await fetchCustomers();
+        setCustomers(fetchedCustomers); // Aktualisiere den Zustand mit den abgerufenen Kunden
+      } catch (error) {
+        console.error("Fehler beim Laden der Kunden:", error);
+        setAppError("Fehler beim Laden der Kunden: " + error);
+        setLoading(false);
+      }
+      setLoading(false);
+    };
+    loadCustomers();
+  }, [fetchCustomers]); // Abhängigkeiten, um den Effekt auszulösen
 
   return (
     <>
+      {appError && <Alert severity="error">{appError}</Alert>}
+      <Container>
+        {loading && (
+          <CircularProgress
+            size={24}
+            sx={{
+              color: blue[500],
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              marginTop: "-12px",
+              marginLeft: "-12px",
+            }}
+          />
+        )}
+      </Container>
+
       <CustomerList customers={customers} />
       <CustomerForm />
     </>
