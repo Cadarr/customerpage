@@ -9,14 +9,17 @@ import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import useSubmitCustomer from '../../../hooks/useSubmitCustomer';
 
 const defaultTheme = createTheme();
 
 export default function CustomerForm() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const submitCustomer = useSubmitCustomer();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const customerData = {
       id: data.get("id"),
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
@@ -27,7 +30,8 @@ export default function CustomerForm() {
       postalCode: data.get("postalCode"),
       city: data.get("city"),
       country: data.get("country")
-    });
+    }
+    await submitCustomer(customerData);
   };
 
   return (
