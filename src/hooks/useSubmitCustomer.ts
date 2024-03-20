@@ -17,7 +17,8 @@ const useSubmitCustomer = () => {
       return result;
     } catch (error) {
       console.error(error);
-      throw new Error(`Fehler beim Anlegen des Kunden - ${error}`);
+      throw new Error(" " +  error);
+
     }
   }, []);
 
