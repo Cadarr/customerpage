@@ -16,7 +16,7 @@ import { useState } from "react";
 
 const defaultTheme = createTheme();
 
-export default function CustomerForm() {
+const CustomerForm = () => {
   const [formError, setFormError] = useState("");
   const [loading, setLoading] = React.useState(false);
 
@@ -197,3 +197,5 @@ export default function CustomerForm() {
     </ThemeProvider>
   );
 }
+
+export default CustomerForm;
