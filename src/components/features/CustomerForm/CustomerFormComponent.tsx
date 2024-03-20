@@ -100,16 +100,16 @@ export default function CustomerForm() {
                 <TextField fullWidth name="addressAddition" label="Adresszusatz" id="addressAddition" />
               </Grid>
               <Grid item xs={12}>
-                <TextField fullWidth name="streetAndNumber" label="Straße und Hausnummer" id="streetAndNumber" />
+                <TextField fullWidth name="streetAndNumber" label="Straße und Hausnummer" id="streetAndNumber" autoComplete="street-address" />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <TextField label="PLZ" fullWidth id="postalCode" name="postalCode" autoFocus />
+                <TextField label="PLZ" fullWidth id="postalCode" name="postalCode" autoComplete="postal-code" />
               </Grid>
               <Grid item xs={12} sm={8}>
-                <TextField label="Ort" fullWidth id="city" name="city" />
+                <TextField label="Ort" fullWidth id="city" name="city" autoComplete="address-level2" />
               </Grid>
               <Grid item xs={12}>
-                <TextField fullWidth name="country" label="Land" id="country" />
+                <TextField fullWidth name="country" label="Land" id="country" autoComplete="country-name" />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Button fullWidth variant="text">
