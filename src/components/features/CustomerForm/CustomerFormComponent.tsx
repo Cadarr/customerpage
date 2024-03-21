@@ -29,7 +29,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
   const [changed, setChanged] = useState(false);
 
   const [customerData, setCustomerData] = useState<Customer>({
-    id: customer?.id || 0,
+    id: customer?.id || "",
     firstName: customer?.firstName || "",
     lastName: customer?.lastName || "",
     notes: customer?.notes || "",
