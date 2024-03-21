@@ -16,33 +16,53 @@ import { blue } from "@mui/material/colors";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useEffect, useState } from "react";
 import useGetCustomers from "../../../hooks/useGetCustomers";
+import useDeleteCustomer from "../../../hooks/useDeleteCustomer";
 import { Link } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 const CustomerList = () => {
-  const [appError, setAppError] = useState("");
+  const [customerListError, setCustomerListError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const fetchCustomers = useGetCustomers();
 
   useEffect(() => {
     const loadCustomers = async () => {
       setLoading(true);
-      setAppError("");
+      setCustomerListError("");
       try {
         const fetchedCustomers = await fetchCustomers();
         setCustomers(fetchedCustomers.sort((a:any, b:any) => a.lastName.localeCompare(b.lastName)));
       } catch (error) {
         console.error("Fehler beim Laden der Kunden:", error);
-        setAppError("Fehler beim Laden der Kunden: " + error);
+        setCustomerListError("Fehler beim Laden der Kunden: " + error);
         setLoading(false);
       }
       setLoading(false);
     };
     loadCustomers();
   }, [fetchCustomers]);
+
+  const deleteCustomer = useDeleteCustomer();
+
+  const handleDeleteCustomer = async (id: string) => {
+    setLoading(true);
+    try {
+      const success = await deleteCustomer(id);
+      if (success) {
+        setCustomers(customers =>
+          customers.filter(customer => customer.id !== id)
+        );
+      }
+    } catch (error) {
+      console.error("Fehler beim Löschen des Kunden:", error);
+      setCustomerListError("Fehler beim Laden der Kunden: " + error);
+      setLoading(false);
+    }
+    setLoading(false);
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -62,7 +82,7 @@ const CustomerList = () => {
           <Typography component="h1" variant="h5">
             Kunden anzeigen
           </Typography>
-          {appError && <Alert severity="error">{appError}</Alert>}
+          {customerListError && <Alert severity="error">{customerListError}</Alert>}
           <Container>
             {loading && (
               <CircularProgress
@@ -87,7 +107,7 @@ const CustomerList = () => {
                 <CustomerCard
                   key={customer.id}
                   customer={customer}
-                  onDelete={(id: any) => alert(`Löschen für Kunde #${id}`)}
+                  onDelete={(id: any) => handleDeleteCustomer(id)}
                 />{" "}
               </Grid>
             ))}
