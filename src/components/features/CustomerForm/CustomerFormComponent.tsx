@@ -16,9 +16,9 @@ import { useState } from "react";
 
 const defaultTheme = createTheme();
 
-export default function CustomerForm() {
+const CustomerForm = () => {
   const [formError, setFormError] = useState("");
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -45,7 +45,7 @@ export default function CustomerForm() {
       country: data.get("country"),
     };
     try {
-      const status = await submitCustomer(customerData);
+      await submitCustomer(customerData);
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
@@ -197,3 +197,5 @@ export default function CustomerForm() {
     </ThemeProvider>
   );
 }
+
+export default CustomerForm;

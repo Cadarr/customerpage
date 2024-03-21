@@ -1,12 +1,16 @@
-import './App.css'
-import SignUp from './components/features/CustomerForm/CustomerFormComponent'
+import "./App.css";
+import CustomerForm from "./components/features/CustomerForm/CustomerFormComponent";
+import CustomerList from "./components/features/CustomersList/CustomerListComponent";
+
 
 function App() {
+
   return (
     <>
-      <SignUp></SignUp>
+      <CustomerList />      
+      <CustomerForm />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
