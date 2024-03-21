@@ -33,7 +33,7 @@ const CustomerList = () => {
       setAppError("");
       try {
         const fetchedCustomers = await fetchCustomers();
-        setCustomers(fetchedCustomers);
+        setCustomers(fetchedCustomers.sort((a:any, b:any) => a.lastName.localeCompare(b.lastName)));
       } catch (error) {
         console.error("Fehler beim Laden der Kunden:", error);
         setAppError("Fehler beim Laden der Kunden: " + error);

@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { blue } from "@mui/material/colors";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
+import Person3OutlinedIcon from "@mui/icons-material/Person3Outlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -17,15 +18,34 @@ import { Link, useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
-const CustomerForm = () => {
+interface CustomerFormProps {
+  customer?: Customer;
+}
+
+const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
   const [formError, setFormError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [notes, setNotes] = useState("");
-
   const [vatIdError, setVatIdError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [changed, setChanged] = useState(false);
+
+  const [customerData, setCustomerData] = useState<Customer>({
+    id: customer?.id || 0,
+    firstName: customer?.firstName || "",
+    lastName: customer?.lastName || "",
+    notes: customer?.notes || "",
+    vatId: customer?.vatId || "",
+    addressAddition: customer?.addressAddition || "",
+    streetAndNumber: customer?.streetAndNumber || "",
+    postalCode: customer?.postalCode || "",
+    city: customer?.city || "",
+    country: customer?.country || "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCustomerData({ ...customerData, [name]: value });
+    setChanged(true);
+  };
 
   const submitCustomer = useSubmitCustomer();
   const navigate = useNavigate();
@@ -33,21 +53,8 @@ const CustomerForm = () => {
     event.preventDefault();
     setLoading(true);
     setFormError("");
-    const data = new FormData(event.currentTarget);
-    const customerData = {
-      id: data.get("id"),
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
-      notes: data.get("notes"),
-      vatId: data.get("vatId"),
-      addressAddition: data.get("addressAddition"),
-      streetAndNumber: data.get("streetAndNumber"),
-      postalCode: data.get("postalCode"),
-      city: data.get("city"),
-      country: data.get("country"),
-    };
     try {
-      if(await submitCustomer(customerData)) navigate("/");
+      if (await submitCustomer(customerData)) navigate("/");
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
@@ -72,10 +79,10 @@ const CustomerForm = () => {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: blue[500] }}>
-            <PersonAddAltOutlinedIcon />
+            {customer ? <Person3OutlinedIcon /> : <PersonAddAltOutlinedIcon />}
           </Avatar>
           <Typography component="h1" variant="h5">
-            Kunde anlegen
+            {customer ? "Kunde bearbeiten" : "Kunde anlegen"}
           </Typography>
           <Box role="form" component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -85,8 +92,8 @@ const CustomerForm = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   label="Vorname"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  value={customerData.firstName}
+                  onChange={handleChange}
                   required
                   aria-required="true"
                   fullWidth
@@ -99,8 +106,8 @@ const CustomerForm = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   label="Nachname"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  value={customerData.lastName}
+                  onChange={handleChange}
                   required
                   aria-required="true"
                   fullWidth
@@ -116,21 +123,21 @@ const CustomerForm = () => {
                   label="Kunden-Nr."
                   id="id"
                   disabled
-                  defaultValue="wird automatisch vergeben"
+                  defaultValue={customer?.id || "wird automatisch vergeben"}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
+                  value={customerData.notes}
+                  onChange={handleChange}
                   name="notes"
                   label="Notizen"
                   id="notes"
                   multiline
                   rows={4}
                   inputProps={{ maxLength: 100 }}
-                  helperText={`${100 - notes.length} Zeichen verbleibend`}
+                  helperText={`${100 - (customerData.notes ? customerData.notes.length : 0)} Zeichen verbleibend`}
                 />
               </Grid>
 
@@ -139,6 +146,8 @@ const CustomerForm = () => {
 
                 <TextField
                   fullWidth
+                  value={customerData.vatId}
+                  onChange={handleChange}
                   name="vatId"
                   label="Umsatzsteuer-IdNr."
                   id="vatId"
@@ -149,11 +158,20 @@ const CustomerForm = () => {
 
               <Grid item xs={12} sx={{ mt: 3 }}>
                 <Typography variant="subtitle1">Adresse</Typography>
-                <TextField fullWidth name="addressAddition" label="Adresszusatz" id="addressAddition" />
+                <TextField
+                  fullWidth
+                  value={customerData.addressAddition}
+                  onChange={handleChange}
+                  name="addressAddition"
+                  label="Adresszusatz"
+                  id="addressAddition"
+                />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
+                  value={customerData.streetAndNumber}
+                  onChange={handleChange}
                   name="streetAndNumber"
                   label="Straße und Hausnummer"
                   id="streetAndNumber"
@@ -161,13 +179,37 @@ const CustomerForm = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <TextField label="PLZ" fullWidth id="postalCode" name="postalCode" autoComplete="postal-code" />
+                <TextField
+                  value={customerData.postalCode}
+                  onChange={handleChange}
+                  label="PLZ"
+                  fullWidth
+                  id="postalCode"
+                  name="postalCode"
+                  autoComplete="postal-code"
+                />
               </Grid>
               <Grid item xs={12} sm={8}>
-                <TextField label="Ort" fullWidth id="city" name="city" autoComplete="address-level2" />
+                <TextField
+                  value={customerData.city}
+                  onChange={handleChange}
+                  label="Ort"
+                  fullWidth
+                  id="city"
+                  name="city"
+                  autoComplete="address-level2"
+                />
               </Grid>
               <Grid item xs={12}>
-                <TextField fullWidth name="country" label="Land" id="country" autoComplete="country-name" />
+                <TextField
+                  value={customerData.country}
+                  onChange={handleChange}
+                  fullWidth
+                  name="country"
+                  label="Land"
+                  id="country"
+                  autoComplete="country-name"
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Link to={"/"}>
@@ -177,7 +219,12 @@ const CustomerForm = () => {
                 </Link>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Button type="submit" fullWidth variant="contained" disabled={!firstName || !lastName || loading}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={!changed || !customerData.firstName || !customerData.lastName || loading}
+                >
                   Kunde anlegen
                   {loading && (
                     <CircularProgress
@@ -200,6 +247,6 @@ const CustomerForm = () => {
       </Container>
     </ThemeProvider>
   );
-}
+};
 
 export default CustomerForm;
