@@ -13,7 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import useSubmitCustomer from "../../../hooks/useSubmitCustomer";
 import { Alert, CircularProgress } from "@mui/material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
@@ -28,6 +28,7 @@ const CustomerForm = () => {
   const [vatIdError, setVatIdError] = useState("");
 
   const submitCustomer = useSubmitCustomer();
+  const navigate = useNavigate();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
@@ -46,7 +47,7 @@ const CustomerForm = () => {
       country: data.get("country"),
     };
     try {
-      await submitCustomer(customerData);
+      if(await submitCustomer(customerData)) navigate("/");
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
