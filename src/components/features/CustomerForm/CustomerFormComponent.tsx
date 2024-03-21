@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import useSubmitCustomer from "../../../hooks/useSubmitCustomer";
 import { Alert, CircularProgress } from "@mui/material";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
@@ -69,7 +70,7 @@ export default function CustomerForm() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor:  blue[500] }}>
+          <Avatar sx={{ m: 1, bgcolor: blue[500] }}>
             <PersonAddAltOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -168,9 +169,11 @@ export default function CustomerForm() {
                 <TextField fullWidth name="country" label="Land" id="country" autoComplete="country-name" />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Button fullWidth variant="text">
-                  Abbrechen
-                </Button>
+                <Link to={"/"}>
+                  <Button fullWidth variant="text">
+                    Abbrechen
+                  </Button>
+                </Link>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Button type="submit" fullWidth variant="contained" disabled={!firstName || !lastName || loading}>
