@@ -5,7 +5,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import { blue } from "@mui/material/colors";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import Person3OutlinedIcon from "@mui/icons-material/Person3Outlined";
 import Typography from "@mui/material/Typography";
@@ -28,18 +27,20 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
   const [loading, setLoading] = useState(false);
   const [changed, setChanged] = useState(false);
 
-  const [customerData, setCustomerData] = useState<Customer>({
-    id: customer?.id || "",
-    firstName: customer?.firstName || "",
-    lastName: customer?.lastName || "",
-    notes: customer?.notes || "",
-    vatId: customer?.vatId || "",
-    addressAddition: customer?.addressAddition || "",
-    streetAndNumber: customer?.streetAndNumber || "",
-    postalCode: customer?.postalCode || "",
-    city: customer?.city || "",
-    country: customer?.country || "",
-  });
+  const [customerData, setCustomerData] = useState<Customer>(
+    customer || {
+      id: "",
+      firstName: "",
+      lastName: "",
+      notes: "",
+      vatId: "",
+      addressAddition: "",
+      streetAndNumber: "",
+      postalCode: "",
+      city: "",
+      country: "",
+    }
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -69,7 +70,9 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
           setFormError(msg.message + " " + formError);
         }
       });
-      if (serviceError.message) setFormError(serviceError.message + " " + formError);
+      if (serviceError.message) {
+        setFormError((prevError) => `${serviceError.message} ${prevError}`);
+      }
     }
 
     setLoading(false);
@@ -87,7 +90,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: blue[500] }}>
+          <Avatar sx={{ m: 1, bgcolor: defaultTheme.palette.primary.main }}>
             {customer ? <Person3OutlinedIcon /> : <PersonAddAltOutlinedIcon />}
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -221,25 +224,23 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Link to={"/"}>
-                  <Button fullWidth variant="text">
-                    Abbrechen
-                  </Button>
-                </Link>
+                <Button component={Link} to="/" fullWidth variant="text">
+                  Abbrechen
+                </Button>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
-                  disabled={!changed || !customerData.firstName || !customerData.lastName || loading}
+                  disabled={!changed || !customerData.firstName.trim() || !customerData.lastName.trim() || loading}
                 >
                   {customer ? "Kunde bearbeiten" : "Kunde anlegen"}
                   {loading && (
                     <CircularProgress
                       size={24}
                       sx={{
-                        color: blue[500],
+                        color: defaultTheme.palette.primary.main,
                         position: "absolute",
                         top: "50%",
                         left: "50%",
