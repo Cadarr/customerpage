@@ -11,14 +11,13 @@ const useSubmitCustomer = () => {
         body: JSON.stringify(customerData),
       });
       if (!response.ok) {
-        throw new Error('Fehler beim Anlegen des Kunden');
+        throw await response.json();
       }
       const result = await response.json();
       return result;
     } catch (error) {
       console.error(error);
-      throw new Error(" " +  error);
-
+      throw error;
     }
   }, []);
 
