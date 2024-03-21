@@ -1,4 +1,5 @@
 interface ServiceError {
+  message?: string;
   path?: string;
   error?: string;
   timestamp?: string;
