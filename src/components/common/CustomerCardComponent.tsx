@@ -31,6 +31,10 @@ const CustomerCard = ({ customer, onDelete }: any) => {
             {customer.postalCode} {customer.city}
             {customer.country && ", " + customer.country}
           </Typography>
+          <Typography variant="body2">
+            <br />
+            {customer.notes}
+          </Typography>
         </CardContent>
         <CardActions>
           <Link to={`/editcustomer/${customer.id}`}>
