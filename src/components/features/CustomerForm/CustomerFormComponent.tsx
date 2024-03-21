@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import useSubmitCustomer from "../../../hooks/useSubmitCustomer";
 import { Alert, CircularProgress } from "@mui/material";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
@@ -27,6 +28,7 @@ const CustomerForm = () => {
   const [vatIdError, setVatIdError] = useState("");
 
   const submitCustomer = useSubmitCustomer();
+  const navigate = useNavigate();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
@@ -45,7 +47,7 @@ const CustomerForm = () => {
       country: data.get("country"),
     };
     try {
-      await submitCustomer(customerData);
+      if(await submitCustomer(customerData)) navigate("/");
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
@@ -69,7 +71,7 @@ const CustomerForm = () => {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor:  blue[500] }}>
+          <Avatar sx={{ m: 1, bgcolor: blue[500] }}>
             <PersonAddAltOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -168,9 +170,11 @@ const CustomerForm = () => {
                 <TextField fullWidth name="country" label="Land" id="country" autoComplete="country-name" />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Button fullWidth variant="text">
-                  Abbrechen
-                </Button>
+                <Link to={"/"}>
+                  <Button fullWidth variant="text">
+                    Abbrechen
+                  </Button>
+                </Link>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Button type="submit" fullWidth variant="contained" disabled={!firstName || !lastName || loading}>

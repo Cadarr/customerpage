@@ -4,13 +4,14 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
-const CustomerCard = ({ customer, onEdit, onDelete } : any) => {
+const CustomerCard = ({ customer, onDelete }: any) => {
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Card sx={{ minWidth: 275, margin: 2  }}>
+      <Card sx={{ minWidth: 275, margin: 2 }}>
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             Kunde #{customer.id}
@@ -32,12 +33,16 @@ const CustomerCard = ({ customer, onEdit, onDelete } : any) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={() => onEdit(customer.id)}>Bearbeiten</Button>
-          <Button size="small" onClick={() => onDelete(customer.id)}>Löschen</Button>
+          <Link to={`/editcustomer/${customer.id}`}>
+            <Button size="small">Bearbeiten</Button>
+          </Link>
+          <Button size="small" onClick={() => onDelete(customer.id)}>
+            Löschen
+          </Button>
         </CardActions>
       </Card>
     </ThemeProvider>
   );
-}
+};
 
 export default CustomerCard;
