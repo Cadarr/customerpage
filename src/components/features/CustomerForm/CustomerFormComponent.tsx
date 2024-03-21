@@ -57,12 +57,21 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
       if (await submitCustomer(customerData)) navigate("/");
     } catch (error) {
       setLoading(false);
-      if (error instanceof Error) {
-        setFormError(`Fehler beim Anlegen des Kunden - ${error.message}`);
-      } else {
-        setFormError("Ein unbekannter Fehler ist aufgetreten");
-      }
+      const serviceError = error as ServiceError;
+      serviceError.messages?.forEach((msg) => {
+        if (msg.property === "vatId") {
+          setVatIdError(
+            msg.message === "The VAT ID is invalid."
+              ? "Ungültige Umsatzsteuer-IdNr."
+              : "Umsatzsteuer-IdNr. konnte nicht verifiziert werden."
+          );
+        } else {
+          setFormError(msg.message + " " + formError);
+        }
+      });
+      if (serviceError.message) setFormError(serviceError.message + " " + formError);
     }
+
     setLoading(false);
   };
 
@@ -225,7 +234,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
                   variant="contained"
                   disabled={!changed || !customerData.firstName || !customerData.lastName || loading}
                 >
-                  Kunde anlegen
+                  {customer ? "Kunde bearbeiten" : "Kunde anlegen"}
                   {loading && (
                     <CircularProgress
                       size={24}
