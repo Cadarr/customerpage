@@ -8,10 +8,25 @@ import { Link } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
-const CustomerCard = ({ customer, onDelete }: any) => {
+interface CustomerCardProps {
+  customer: Customer;
+  onDelete: (id: string) => void;
+}
+
+const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onDelete }) => {
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Card sx={{ minWidth: 275, margin: 2 }}>
+      <Card
+        sx={{
+          minWidth: 275,
+          maxWidth: 345,
+          margin: 2,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        {" "}
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             Kunde #{customer.id}
@@ -37,9 +52,9 @@ const CustomerCard = ({ customer, onDelete }: any) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Link to={`/editcustomer/${customer.id}`}>
-            <Button size="small">Bearbeiten</Button>
-          </Link>
+          <Button component={Link} to={`/editCustomer/${customer.id}`} size="small">
+            Bearbeiten
+          </Button>
           <Button size="small" onClick={() => onDelete(customer.id)}>
             Löschen
           </Button>
