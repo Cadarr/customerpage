@@ -1,8 +1,8 @@
 interface ServiceError {
-  path: string;
-  error: string;
-  timestamp: string;
-  status: number;
+  path?: string;
+  error?: string;
+  timestamp?: string;
+  status?: number;
   messages?: [
     {
       property: string;
