@@ -3,11 +3,15 @@ import { Link, Outlet } from "react-router-dom";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ApiOutlinedIcon from "@mui/icons-material/ApiOutlined";
 import TranslateIcon from "@mui/icons-material/Translate";
+import { useTheme } from "@mui/material/styles";
+
 
 import { useTranslation } from "react-i18next";
 
 const Root = () => {
   const { t, i18n } = useTranslation();
+  const theme = useTheme();
+
 
   const handleGitHubClick = (repositoryName: string) => () => {
     window.open(`https://github.com/Cadarr/${repositoryName}`, "_blank", "noopener,noreferrer");
@@ -22,7 +26,7 @@ const Root = () => {
   return (
     <>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar sx={{ bgcolor: theme.palette.secondary.main }} >
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
               {t("kundenverwaltung")}
