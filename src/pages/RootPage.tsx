@@ -1,4 +1,4 @@
-import { AppBar, Button, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, Toolbar, Typography, Link as MuiLink } from "@mui/material";
 import { Link, Outlet } from "react-router-dom";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import ApiOutlinedIcon from '@mui/icons-material/ApiOutlined';
@@ -36,6 +36,12 @@ const Root = () => {
       <div id="content">
         <Outlet />
       </div>
+
+      <Box component="footer" sx={{ mt: 30, textAlign: 'center' }}>
+        <MuiLink href="https://coaching.cards/impressum/" target="_blank" rel="noopener noreferrer">
+          Impressum
+        </MuiLink>
+      </Box>
     </>
   );
 };
