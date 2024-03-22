@@ -3,8 +3,11 @@ import CustomerList from "../components/features/CustomersList/CustomerListCompo
 import useGetCustomers from "../hooks/useGetCustomers";
 import { CircularProgress, Container, Alert } from "@mui/material";
 import useDeleteCustomer from "../hooks/useDeleteCustomer";
+import { useTranslation } from "react-i18next";
 
 const CustomerListPage = () => {
+  const { t } = useTranslation();
+
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,7 +24,7 @@ const CustomerListPage = () => {
       const fetchedCustomers = await fetchCustomers();
       setCustomers(fetchedCustomers.sort((a:any, b:any) => a.lastName.localeCompare(b.lastName)));
     } catch (error) {
-      setError("Fehler beim Laden der Kunden: " + error);
+      setError(t("fehlerLadenKunden") + error);
     }
     setLoading(false);
   };
@@ -32,7 +35,7 @@ const CustomerListPage = () => {
       await deleteCustomer(id);
       setCustomers((currentCustomers) => currentCustomers.filter((customer) => customer.id !== id));
     } catch (error) {
-      setError("Fehler beim Löschen des Kunden: " + error);
+      setError(t("fehlerLoeschenKunden") + error);
     }
     setLoading(false);
   };

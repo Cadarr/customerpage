@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const defaultTheme = createTheme();
 
@@ -14,6 +15,8 @@ interface CustomerCardProps {
 }
 
 const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onDelete }) => {
+  const { t } = useTranslation();
+  
   return (
     <ThemeProvider theme={defaultTheme}>
       <Card
@@ -29,14 +32,14 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onDelete }) => {
         {" "}
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Kunde #{customer.id}
+            {t("kunde")} #{customer.id}
           </Typography>
           <Typography variant="h5" component="div">
             {customer.firstName} {customer.lastName}
           </Typography>
           {customer.vatId && (
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              Umsatzsteuer-IdNr.: {customer.vatId}
+               {t("ustidnr")}: {customer.vatId}
             </Typography>
           )}
           <Typography variant="body2">
@@ -53,10 +56,10 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onDelete }) => {
         </CardContent>
         <CardActions>
           <Button component={Link} to={`/editCustomer/${customer.id}`} size="small">
-            Bearbeiten
+            {t("bearbeiten")}
           </Button>
           <Button size="small" onClick={() => onDelete(customer.id)}>
-            Löschen
+          {t("loeschen")}
           </Button>
         </CardActions>
       </Card>
