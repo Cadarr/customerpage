@@ -15,7 +15,7 @@ const Root = () => {
     <>
       <AppBar position="static">
         <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
           <Link to="/" style={{ textDecoration: "none", color: 'inherit' }}>
               Kundenverwaltung
           </Link>
