@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import CustomerList from "../components/features/CustomersList/CustomerListComponent";
 import useGetCustomers from "../hooks/useGetCustomers";
-import { CircularProgress, Container, Alert } from "@mui/material";
+import { Container, Alert } from "@mui/material";
 import useDeleteCustomer from "../hooks/useDeleteCustomer";
 import { useTranslation } from "react-i18next";
+import LoadingSymbol from "../components/common/LoadingSymbol";
 
 const CustomerListPage = () => {
   const { t } = useTranslation();
@@ -22,7 +23,7 @@ const CustomerListPage = () => {
     setLoading(true);
     try {
       const fetchedCustomers = await fetchCustomers();
-      setCustomers(fetchedCustomers.sort((a:any, b:any) => a.lastName.localeCompare(b.lastName)));
+      setCustomers(fetchedCustomers.sort((a: any, b: any) => a.lastName.localeCompare(b.lastName)));
     } catch (error) {
       setError(t("fehlerLadenKunden") + error);
     }
@@ -43,7 +44,7 @@ const CustomerListPage = () => {
   return (
     <Container>
       {error && <Alert severity="error">{error}</Alert>}
-      {loading ? <CircularProgress /> : <CustomerList customers={customers} onDeleteCustomer={handleDeleteCustomer} />}
+      {loading ? <LoadingSymbol /> : <CustomerList customers={customers} onDeleteCustomer={handleDeleteCustomer} />}
     </Container>
   );
 };
