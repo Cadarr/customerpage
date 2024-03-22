@@ -14,6 +14,7 @@ import useSubmitCustomer from "../../../hooks/useSubmitCustomer";
 import { Alert, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const defaultTheme = createTheme();
 
@@ -22,6 +23,8 @@ interface CustomerFormProps {
 }
 
 const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
+  const { t } = useTranslation();
+  
   const [formError, setFormError] = useState("");
   const [vatIdError, setVatIdError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -63,8 +66,8 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
         if (msg.property === "vatId") {
           setVatIdError(
             msg.message === "The VAT ID is invalid."
-              ? "Ungültige Umsatzsteuer-IdNr."
-              : "Umsatzsteuer-IdNr. konnte nicht verifiziert werden."
+              ? t("ungueltigeUmStId")
+              : t("unverifizierteUmStId") 
           );
         } else {
           setFormError(msg.message + " " + formError);
@@ -94,7 +97,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
             {customer ? <Person3OutlinedIcon /> : <PersonAddAltOutlinedIcon />}
           </Avatar>
           <Typography component="h1" variant="h5">
-            {customer ? "Kunde bearbeiten" : "Kunde anlegen"}
+            {customer ? t("kundeBearbeiten") : t("kundeAnlegen")}
           </Typography>
           <Box role="form" component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -103,7 +106,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Vorname"
+                  label={t("vorname")}
                   value={customerData.firstName}
                   onChange={handleChange}
                   required
@@ -117,7 +120,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Nachname"
+                  label={t("nachname")}
                   value={customerData.lastName}
                   onChange={handleChange}
                   required
@@ -132,10 +135,10 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
                 <TextField
                   fullWidth
                   name="id"
-                  label="Kunden-Nr."
+                  label={t("kundenNr")}
                   id="id"
                   disabled
-                  defaultValue={customer?.id || "wird automatisch vergeben"}
+                  defaultValue={customer?.id || t("wirdAutomatischVergeben")}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -144,24 +147,24 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
                   value={customerData.notes}
                   onChange={handleChange}
                   name="notes"
-                  label="Notizen"
+                  label={t("notizen")}
                   id="notes"
                   multiline
                   rows={4}
                   inputProps={{ maxLength: 100 }}
-                  helperText={`${100 - (customerData.notes ? customerData.notes.length : 0)} Zeichen verbleibend`}
+                  helperText={`${100 - (customerData.notes ? customerData.notes.length : 0)} ${t("zeichenVerbleibend")}`}
                 />
               </Grid>
 
               <Grid item xs={12} sx={{ mt: 3 }}>
-                <Typography variant="subtitle1">Steuerangaben</Typography>
+                <Typography variant="subtitle1">{t("steuerangaben")}</Typography>
 
                 <TextField
                   fullWidth
                   value={customerData.vatId}
                   onChange={handleChange}
                   name="vatId"
-                  label="Umsatzsteuer-IdNr."
+                  label={t("umsatzsteuerIdNr")}
                   id="vatId"
                   error={vatIdError !== ""}
                   helperText={vatIdError || undefined}
@@ -169,13 +172,13 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
               </Grid>
 
               <Grid item xs={12} sx={{ mt: 3 }}>
-                <Typography variant="subtitle1">Adresse</Typography>
+                <Typography variant="subtitle1">{t("adresse")}</Typography>
                 <TextField
                   fullWidth
                   value={customerData.addressAddition}
                   onChange={handleChange}
                   name="addressAddition"
-                  label="Adresszusatz"
+                  label={t("adresszusatz")}
                   id="addressAddition"
                 />
               </Grid>
@@ -185,7 +188,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
                   value={customerData.streetAndNumber}
                   onChange={handleChange}
                   name="streetAndNumber"
-                  label="Straße und Hausnummer"
+                  label={t("strasseUndHausnummer")}
                   id="streetAndNumber"
                   autoComplete="street-address"
                 />
@@ -194,7 +197,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
                 <TextField
                   value={customerData.postalCode}
                   onChange={handleChange}
-                  label="PLZ"
+                  label={t("plz")}
                   fullWidth
                   id="postalCode"
                   name="postalCode"
@@ -205,7 +208,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
                 <TextField
                   value={customerData.city}
                   onChange={handleChange}
-                  label="Ort"
+                  label={t("ort")}
                   fullWidth
                   id="city"
                   name="city"
@@ -218,14 +221,14 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
                   onChange={handleChange}
                   fullWidth
                   name="country"
-                  label="Land"
+                  label={t("land")}
                   id="country"
                   autoComplete="country-name"
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Button component={Link} to="/" fullWidth variant="text">
-                  Abbrechen
+                {t("abbrechen")}
                 </Button>
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -235,7 +238,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
                   variant="contained"
                   disabled={!changed || !customerData.firstName.trim() || !customerData.lastName.trim() || loading}
                 >
-                  {customer ? "Kunde bearbeiten" : "Kunde anlegen"}
+                  {customer ? t("kundeBearbeiten") : t("kundeAnlegen")}
                   {loading && (
                     <CircularProgress
                       size={24}
