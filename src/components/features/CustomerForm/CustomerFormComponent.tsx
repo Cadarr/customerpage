@@ -76,13 +76,15 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer }) => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" >
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 6,
+          p: 2,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          bgcolor: "#ffffff"
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
